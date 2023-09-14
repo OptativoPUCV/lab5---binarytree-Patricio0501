@@ -169,48 +169,44 @@ void eraseTreeMap(TreeMap * tree, void* key){
 
 }
 
-
-
-
 Pair* searchTreeMap(TreeMap* tree, void* key) {
-    if (tree == NULL || key == NULL || tree->root == NULL) {
+    if (tree == NULL || tree->root == NULL) {
+        tree->current = NULL;
         return NULL; 
     }
 
     TreeNode* current = tree->root;
-
     while (current != NULL) {
         int cmp = tree->lower_than(key, current->pair->key);
-
         if (cmp == 0) {
-            tree->current = current;
+            tree->current = current; 
             return current->pair;
-        }
-        if (cmp < 0) {
+        } else if (cmp < 0) {
             current = current->left;
         } else {
             current = current->right;
         }
     }
-    tree->current = NULL;
+
+    tree->current = NULL; 
     return NULL;
 }
 
+
 Pair* upperBound(TreeMap* tree, void* key) {
     if (tree == NULL || tree->root == NULL) {
-        return NULL; // Árbol vacío o nulo
+        return NULL; 
     }
 
     TreeNode* current = tree->root;
-    Pair* ub_pair = NULL; // Pair con la menor clave mayor o igual a key
+    Pair* ub_pair = NULL;
 
     while (current != NULL) {
         int cmp = tree->lower_than(key, current->pair->key);
 
         if (cmp == 0) {
-            return current->pair; // Clave encontrada
+            return current->pair; 
         } else if (cmp < 0) {
-            // Actualizar el Pair con la menor clave mayor o igual a key
             if (ub_pair == NULL || tree->lower_than(current->pair->key, ub_pair->key) < 0) {
                 ub_pair = current->pair;
             }
