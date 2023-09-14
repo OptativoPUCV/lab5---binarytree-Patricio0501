@@ -242,3 +242,26 @@ Thu 14 Sep 2023 06:04:32 PM UTC:
  tests:  15|4
 total_score: 25/70
 725651d
+Thu 14 Sep 2023 06:11:41 PM UTC: 
+ treemap.c | 54 +++++++++++++++++++++++++++++++++++++-----------------
+ 1 file changed, 37 insertions(+), 17 deletions(-)
+In file included from test.c:4:
+treemap.c: In function ‘searchNode’:
+treemap.c:194:23: error: assignment to ‘TreeNode *’ from incompatible pointer type ‘AvlNode *’ [-Werror=incompatible-pointer-types]
+  194 |         tree->current = node;
+      |                       ^
+treemap.c: In function ‘searchTreeMap’:
+treemap.c:209:33: error: passing argument 1 of ‘searchNode’ from incompatible pointer type [-Werror=incompatible-pointer-types]
+  209 |     tree->root = searchNode(tree->root, key, tree);
+      |                             ~~~~^~~~~~
+      |                                 |
+      |                                 TreeNode *
+treemap.c:186:30: note: expected ‘AvlNode *’ but argument is of type ‘TreeNode *’
+  186 | AvlNode* searchNode(AvlNode* node, void* key, TreeMap* tree) {
+      |                     ~~~~~~~~~^~~~
+treemap.c:209:16: error: assignment to ‘TreeNode *’ from incompatible pointer type ‘AvlNode *’ [-Werror=incompatible-pointer-types]
+  209 |     tree->root = searchNode(tree->root, key, tree);
+      |                ^
+cc1: all warnings being treated as errors
+Compilation failed
+93278c5

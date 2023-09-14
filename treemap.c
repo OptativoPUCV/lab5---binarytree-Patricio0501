@@ -8,10 +8,24 @@ typedef struct TreeNode TreeNode;
 
 struct TreeNode {
     Pair* pair;
-    TreeNode * left;
-    TreeNode * right;
-    TreeNode * parent;
+    struct TreeNode* left;
+    struct TreeNode* right;
+    struct TreeNode* parent;
+    int height; 
 };
+
+typedef struct {
+    struct TreeNode* root;
+    struct TreeNode* current;
+    int (*lower_than)(void* key1, void* key2);
+} AvlTree;
+
+typedef struct AvlNode {
+    Pair* pair;
+    struct AvlNode* left;
+    struct AvlNode* right;
+    int height;
+} AvlNode;
 
 struct TreeMap {
     TreeNode * root;
@@ -25,16 +39,17 @@ int is_equal(TreeMap* tree, void* key1, void* key2){
     else return 0;
 }
 
-
-TreeNode * createTreeNode(void* key, void * value) {
-    TreeNode * new = (TreeNode *)malloc(sizeof(TreeNode));
+struct TreeNode* createTreeNode(void* key, void* value) {
+    struct TreeNode* new = (struct TreeNode*)malloc(sizeof(struct TreeNode));
     if (new == NULL) return NULL;
-    new->pair = (Pair *)malloc(sizeof(Pair));
+    new->pair = (Pair*)malloc(sizeof(Pair));
     new->pair->key = key;
     new->pair->value = value;
     new->parent = new->left = new->right = NULL;
+    new->height = 1; 
     return new;
 }
+
 
 TreeMap * createTreeMap(int (*lower_than) (void* key1, void* key2)) {
     TreeMap * map = (TreeMap *)malloc(sizeof(TreeMap));
@@ -168,30 +183,36 @@ void eraseTreeMap(TreeMap * tree, void* key){
     removeNode(tree, node);
 
 }
+AvlNode* searchNode(AvlNode* node, void* key, TreeMap* tree) {
+    if (node == NULL) {
+        tree->current = NULL;
+        return NULL;
+    }
+
+    int cmp = tree->lower_than(key, node->pair->key);
+    if (cmp == 0) {
+        tree->current = node;
+        return node; 
+    } else if (cmp < 0) {
+        return searchNode(node->left, key, tree); 
+    } else {
+        return searchNode(node->right, key, tree); 
+    }
+}
 
 Pair* searchTreeMap(TreeMap* tree, void* key) {
     if (tree == NULL || tree->root == NULL) {
         tree->current = NULL;
-        return NULL; 
+        return NULL; // El árbol está vacío
     }
 
-    TreeNode* current = tree->root;
-    while (current != NULL) {
-        int cmp = tree->lower_than(key, current->pair->key);
-        if (cmp == 0) {
-            tree->current = current; 
-            return current->pair;
-        } else if (cmp < 0) {
-            current = current->left;
-        } else {
-            current = current->right;
-        }
+    tree->root = searchNode(tree->root, key, tree);
+    if (tree->current != NULL) {
+        return tree->current->pair; // Devuelve el Pair encontrado
+    } else {
+        return NULL; // La clave no se encontró en el árbol
     }
-
-    tree->current = NULL; 
-    return NULL;
 }
-
 
 Pair* upperBound(TreeMap* tree, void* key) {
     if (tree == NULL || tree->root == NULL) {
