@@ -51,50 +51,44 @@ TreeMap * createTreeMap(int (*lower_than) (void* key1, void* key2)) {
 
 
 void insertTreeMap(TreeMap * tree, void* key, void * value) {
-  if (tree == NULL){
-    return;
-  }
-  TreeNode* newNode = createTreeNode(key, value);
-    if (newNode == NULL) {
-        return;
+   if (tree == NULL || key == NULL) {
+        return; 
     }
+    TreeNode* current = tree->root;
+    TreeNode* parent = NULL;
+    int cmp = 0;
 
-    if (tree->root == NULL) {
-        tree->root = newNode;
-        tree->current = newNode;
-    } else {
-        TreeNode* current = tree->root;
-        TreeNode* parent = NULL;
+    while (current != NULL) {
+        cmp = tree->lower_than(key, current->pair->key);
 
-        while (current != NULL) {
-            parent = current;
-
-            int cmp = tree->lower_than(key, current->pair->key);
-
-            if (cmp < 0) {
-                current = current->left;
-            } else if (cmp > 0) {
-                current = current->right;
-            } else {
-                free(newNode->pair);
-                free(newNode);
-                return;
-            }
+        if (cmp == 0) {
+            return;
         }
 
-        newNode->parent = parent;
-
-        int cmp = tree->lower_than(key, parent->pair->key);
+        parent = current;
 
         if (cmp < 0) {
-            parent->left = newNode;
+            current = current->left;
         } else {
-            parent->right = newNode;
+            current = current->right;
         }
-
-        tree->current = newNode;
     }
 
+    TreeNode* newNode = createTreeNode(key, value);
+    if (newNode == NULL) {
+        return; 
+    }
+
+    newNode->parent = parent;
+
+    if (parent == NULL) {
+        tree->root = newNode;
+    } else if (cmp < 0) {
+        parent->left = newNode;
+    } else {
+        parent->right = newNode;
+    }
+    tree->current = newNode;
 }
 
 TreeNode * minimum(TreeNode * x){
