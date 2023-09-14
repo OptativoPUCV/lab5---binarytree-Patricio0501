@@ -69,7 +69,7 @@ void insertTreeMap(TreeMap* tree, void* key, void* value) {
         parent = current;
 
         if (cmp < 0) {
-            current = current->left;
+            current = current->left->left;
         } else {
             current = current->right;
         }
