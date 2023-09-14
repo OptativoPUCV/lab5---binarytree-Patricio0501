@@ -177,7 +177,7 @@ Pair* searchTreeMap(TreeMap* tree, void* key) {
         if (equal) {
             tree->current = currentNode;
             return currentNode->pair;
-        } else if (tree->lower_than(key, currentNode->pair->key) < 0) {
+        } else if (tree->lower_than(key, currentNode->pair->key) > 0) {
             currentNode = currentNode->left;
         } else {
             currentNode = currentNode->right;
