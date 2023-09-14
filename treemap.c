@@ -172,12 +172,12 @@ Pair* searchTreeMap(TreeMap* tree, void* key) {
     TreeNode* currentNode = tree->root;
 
     while (currentNode != NULL) {
-        int cmp = tree->lower_than(key, currentNode->pair->key);
-        
-        if (cmp == 0) {
+        int equal = is_equal(tree, key, currentNode->pair->key);
+
+        if (equal) {
             tree->current = currentNode;
             return currentNode->pair;
-        } else if (cmp < 0) {
+        } else if (tree->lower_than(key, currentNode->pair->key) < 0) {
             currentNode = currentNode->left;
         } else {
             currentNode = currentNode->right;
