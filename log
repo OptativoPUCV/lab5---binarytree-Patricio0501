@@ -265,3 +265,9 @@ treemap.c:209:16: error: assignment to ‘TreeNode *’ from incompatible pointe
 cc1: all warnings being treated as errors
 Compilation failed
 93278c5
+Thu 14 Sep 2023 06:12:05 PM UTC: 
+ treemap.c | 54 +++++++++++++++++-------------------------------------
+ 1 file changed, 17 insertions(+), 37 deletions(-)
+ tests:  15|4
+total_score: 25/70
+c06f331
