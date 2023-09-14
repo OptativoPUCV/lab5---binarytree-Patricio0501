@@ -86,7 +86,7 @@ void insertTreeMap(TreeMap * tree, void* key, void * value) {
 
         int cmp = tree->lower_than(key, parent->pair->key);
 
-        if (cmp > 0) {
+        if (cmp >= 0) {
             parent->left = newNode;
         } else {
             parent->right = newNode;
