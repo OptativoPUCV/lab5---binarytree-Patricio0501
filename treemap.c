@@ -168,25 +168,34 @@ void eraseTreeMap(TreeMap * tree, void* key){
 
 }
 
-Pair* searchTreeMap(TreeMap* tree, void* key) {
-    TreeNode* currentNode = tree->root;
-    Pair* foundPair = NULL;
-
-    while (currentNode != NULL) {
-        int equal = is_equal(tree, key, currentNode->pair->key);
-
-        if (equal) {
-            tree->current = currentNode;
-            foundPair = currentNode->pair;
-            currentNode = currentNode->left; 
-        } else if (tree->lower_than(key, currentNode->pair->key) < 0) {
-            currentNode = currentNode->left;
-        } else {
-            currentNode = currentNode->right;
-        }
+Pair* searchTreeMapRecursive(TreeNode* currentNode, void* key, int (*lower_than)(void*, void*), TreeNode** foundNode) {
+    if (currentNode == NULL) {
+        *foundNode = NULL;
+        return NULL;
     }
-    return foundPair;
+
+    int cmp = lower_than(key, currentNode->pair->key);
+
+    if (cmp == 0) {
+      *foundNode = currentNode;
+      return currentNode->pair;
+      
+    } else if (cmp < 0) {
+        return searchTreeMapRecursive(currentNode->left, key, lower_than, foundNode);
+    } else {
+        return searchTreeMapRecursive(currentNode->right, key, lower_than, foundNode);
+    }
 }
+
+Pair* searchTreeMap(TreeMap* tree, void* key) {
+    TreeNode* foundNode = NULL;
+    Pair* result = searchTreeMapRecursive(tree->root, key, tree->lower_than, &foundNode);
+
+    tree->current = foundNode;
+
+    return result;
+}
+
 
 
 
