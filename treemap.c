@@ -202,7 +202,7 @@ Pair* upperBound(TreeMap* tree, void* key) {
     }
 
     TreeNode* current = tree->root;
-    TreeNode* ub_node = NULL; // Nodo con la menor clave mayor o igual a key
+    Pair* ub_pair = NULL; // Pair con la menor clave mayor o igual a key
 
     while (current != NULL) {
         int cmp = tree->lower_than(key, current->pair->key);
@@ -210,20 +210,20 @@ Pair* upperBound(TreeMap* tree, void* key) {
         if (cmp == 0) {
             return current->pair; // Clave encontrada
         } else if (cmp < 0) {
-            // Actualizar el nodo con la menor clave mayor o igual a key
-            ub_node = current;
+            // Actualizar el Pair con la menor clave mayor o igual a key
+            if (ub_pair == NULL || tree->lower_than(current->pair->key, ub_pair->key) < 0) {
+                ub_pair = current->pair;
+            }
+
             current = current->left;
         } else {
             current = current->right;
         }
     }
 
-    if (ub_node != NULL) {
-        return ub_node->pair;
-    } else {
-        return NULL; // No se encontró ningún nodo con clave mayor o igual a key
-    }
+    return ub_pair;
 }
+
 
 
 Pair* firstTreeMap(TreeMap* tree) {
