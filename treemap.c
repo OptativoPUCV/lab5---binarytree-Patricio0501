@@ -100,20 +100,6 @@ TreeNode* minimum(TreeNode* x) {
     return x;
 }
 
-
-
-TreeNode* minimum(TreeNode* x) {
-    if (x == NULL) {
-        return NULL; 
-    }
-
-    while (x->left != NULL) {
-        x = x->left;
-    }
-
-    return x; 
-}
-
 void removeNode(TreeMap* tree, TreeNode* node) {
     if (tree == NULL || node == NULL) {
         return; 
